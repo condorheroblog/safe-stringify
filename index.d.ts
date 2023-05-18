@@ -7,6 +7,11 @@ export type Options = {
 	Set it to `'\t'` for tab indentation or the number of spaces you want.
 	*/
 	readonly indentation?: string | number;
+
+	/**
+	Control whether to display key names for circular references
+	*/
+	readonly trace?: boolean;
 };
 
 /**
@@ -24,6 +29,9 @@ console.log(safeStringify(foo));
 
 console.log(JSON.stringify(foo));
 //=> TypeError: Converting circular structure to JSON
+
+console.log(safeStringify(foo, {trace: true}));
+//=> '{"a":true,"b":"[Circular *]"}'
 ```
 */
 export default function safeStringify(value: unknown, options?: Options): string;

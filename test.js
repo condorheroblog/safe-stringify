@@ -5,6 +5,11 @@ const options = {
 	indentation: '\t',
 };
 
+const optionsWithTrace = {
+	...options,
+	trace: true,
+};
+
 test('main', t => {
 	const fixture = {
 		a: true,
@@ -14,6 +19,7 @@ test('main', t => {
 	};
 
 	t.is(safeStringify(fixture, options), JSON.stringify(fixture, undefined, '\t'));
+	t.is(safeStringify(fixture, optionsWithTrace), JSON.stringify(fixture, undefined, '\t'));
 });
 
 test('circular object', t => {
@@ -30,6 +36,7 @@ test('circular object', t => {
 	};
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });
 
 test('circular object 2', t => {
@@ -43,6 +50,7 @@ test('circular object 2', t => {
 	};
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });
 
 test('circular array', t => {
@@ -51,6 +59,7 @@ test('circular array', t => {
 	fixture.push(fixture, fixture);
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });
 
 test('multiple circular objects in array', t => {
@@ -61,6 +70,7 @@ test('multiple circular objects in array', t => {
 	fixture.b = fixture;
 
 	t.snapshot(safeStringify([fixture, fixture], options));
+	t.snapshot(safeStringify([fixture, fixture], optionsWithTrace));
 });
 
 test('multiple circular objects in object', t => {
@@ -71,6 +81,7 @@ test('multiple circular objects in object', t => {
 	fixture.b = fixture;
 
 	t.snapshot(safeStringify({x: fixture, y: fixture}, options));
+	t.snapshot(safeStringify({x: fixture, y: fixture}, optionsWithTrace));
 });
 
 test('nested non-circular object', t => {
@@ -85,6 +96,7 @@ test('nested non-circular object', t => {
 	};
 
 	t.is(safeStringify(fixture, options), JSON.stringify(fixture, undefined, '\t'));
+	t.is(safeStringify(fixture, optionsWithTrace), JSON.stringify(fixture, undefined, '\t'));
 });
 
 test('nested circular object', t => {
@@ -99,6 +111,7 @@ test('nested circular object', t => {
 	fixture.a.b.c.d = fixture.a;
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });
 
 test('complex object with circular and non-circular references', t => {
@@ -116,6 +129,7 @@ test('complex object with circular and non-circular references', t => {
 	};
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });
 
 test('object with circular references at different depths', t => {
@@ -131,6 +145,7 @@ test('object with circular references at different depths', t => {
 	fixture.a.b.c.e = fixture.a.b;
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });
 
 test('object with value as a circular reference', t => {
@@ -142,12 +157,14 @@ test('object with value as a circular reference', t => {
 	fixture.self = fixture;
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });
 
 test('empty object', t => {
 	const fixture = {};
 
 	t.is(safeStringify(fixture, options), JSON.stringify(fixture, undefined, '\t'));
+	t.is(safeStringify(fixture, optionsWithTrace), JSON.stringify(fixture, undefined, '\t'));
 });
 
 test('object with null value', t => {
@@ -156,6 +173,7 @@ test('object with null value', t => {
 	};
 
 	t.is(safeStringify(fixture, options), JSON.stringify(fixture, undefined, '\t'));
+	t.is(safeStringify(fixture, optionsWithTrace), JSON.stringify(fixture, undefined, '\t'));
 });
 
 test('object with undefined value', t => {
@@ -164,6 +182,7 @@ test('object with undefined value', t => {
 	};
 
 	t.is(safeStringify(fixture, options), JSON.stringify(fixture, undefined, '\t'));
+	t.is(safeStringify(fixture, optionsWithTrace), JSON.stringify(fixture, undefined, '\t'));
 });
 
 test('circular object with multiple nested circular references', t => {
@@ -180,6 +199,7 @@ test('circular object with multiple nested circular references', t => {
 	fixture.a.b.c.f = fixture.a.b.c;
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });
 
 test('circular array with nested circular arrays', t => {
@@ -188,6 +208,7 @@ test('circular array with nested circular arrays', t => {
 	fixture.push(fixture, [fixture, fixture]);
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });
 
 test('object with circular reference to parent and grandparent', t => {
@@ -203,6 +224,7 @@ test('object with circular reference to parent and grandparent', t => {
 	fixture.a.b.c.grandparent = fixture.a;
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });
 
 test('array containing objects with the same circular reference', t => {
@@ -215,4 +237,5 @@ test('array containing objects with the same circular reference', t => {
 	];
 
 	t.snapshot(safeStringify(fixture, options));
+	t.snapshot(safeStringify(fixture, optionsWithTrace));
 });

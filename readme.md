@@ -51,6 +51,31 @@ The indentation of the JSON.
 
 By default, the JSON is not indented. Set it to `'\t'` for tab indentation or the number of spaces you want.
 
+##### trace
+
+Type: `'boolean'`\
+Default: `false`
+
+Control whether to display key names for circular references.
+
+By default, this option is set to false.
+
+Example of using the trace option:
+
+```js
+const foo = {a: true};
+foo.b = foo;
+
+console.log(safeStringify(foo, {trace: true}));
+//=> '{"a":true,"b":"[Circular *]"}'
+
+const goo = {a: true, b: {}};
+goo.b.c = goo.b;
+
+console.log(safeStringify(goo, {trace: true}));
+//=> '{"a":true,"b":{"c":"[Circular *b]"}}'
+```
+
 ## FAQ
 
 ### Why another safe stringify package?

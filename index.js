@@ -1,16 +1,16 @@
-function safeStringifyReplacer(seen) {
+function safeStringifyReplacer(seen, trace) {
 	return function (key, value) {
 		if (value !== null && typeof value === 'object') {
 			if (seen.has(value)) {
-				return '[Circular]';
+				return trace ? `[Circular *${seen.get(value)}]` : '[Circular]';
 			}
 
-			seen.add(value);
+			seen.set(value, key);
 
 			const newValue = Array.isArray(value) ? [] : {};
 
 			for (const [key2, value2] of Object.entries(value)) {
-				newValue[key2] = safeStringifyReplacer(seen)(key2, value2);
+				newValue[key2] = safeStringifyReplacer(seen, trace)(key2, value2);
 			}
 
 			seen.delete(value);
@@ -22,7 +22,7 @@ function safeStringifyReplacer(seen) {
 	};
 }
 
-export default function safeStringify(object, {indentation} = {}) {
-	const seen = new WeakSet();
-	return JSON.stringify(object, safeStringifyReplacer(seen), indentation);
+export default function safeStringify(object, {indentation, trace} = {}) {
+	const seen = new WeakMap();
+	return JSON.stringify(object, safeStringifyReplacer(seen, trace), indentation);
 }
